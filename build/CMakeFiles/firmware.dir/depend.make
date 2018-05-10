@@ -37,6 +37,7 @@ CMakeFiles/firmware.dir/peripheral/rpi-interrupts.c.obj: ../peripheral/rpi-inter
 CMakeFiles/firmware.dir/peripheral/rpi-interrupts.c.obj: ../peripheral/rpi-interrupts.h
 
 CMakeFiles/firmware.dir/peripheral/rpi-smi.c.obj: ../peripheral/rpi-base.h
+CMakeFiles/firmware.dir/peripheral/rpi-smi.c.obj: ../peripheral/rpi-gpio.h
 CMakeFiles/firmware.dir/peripheral/rpi-smi.c.obj: ../peripheral/rpi-smi.c
 CMakeFiles/firmware.dir/peripheral/rpi-smi.c.obj: ../peripheral/rpi-smi.h
 

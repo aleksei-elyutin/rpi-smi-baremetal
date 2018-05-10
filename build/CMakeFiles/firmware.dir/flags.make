@@ -9,7 +9,7 @@ ASM_DEFINES = -DRPI2=1
 
 ASM_INCLUDES = 
 
-C_FLAGS =  -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7-a -mtune=cortex-a7 -O4 -Wall -nostartfiles  
+C_FLAGS =  -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7-a -mtune=cortex-a7 -O1 -Wall -nostartfiles  
 
 C_DEFINES = -DRPI2=1
 

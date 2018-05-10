@@ -18,3 +18,4 @@ void RPI_WaitMicroSeconds( uint32_t us )
         /* BLANK */
     }
 }
+

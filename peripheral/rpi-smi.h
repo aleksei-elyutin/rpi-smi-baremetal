@@ -45,8 +45,8 @@ struct smi_settings {
 
 struct smi_instance {
     struct smi_settings settings;
-    void *cm_smi_regs_ptr;// = CM_SMI_BASE_ADDRESS ;
-    void *smi_regs_ptr;// = SMI_BASE_ADDRESS ; //Pointer for base smi physical address
+    uint32_t *cm_smi_regs_ptr;// = CM_SMI_BASE_ADDRESS ;
+    uint32_t *smi_regs_ptr;// = SMI_BASE_ADDRESS ; //Pointer for base smi physical address
 };
 
 inline void smi_set_address(struct smi_instance *inst, unsigned int address);
@@ -54,6 +54,7 @@ void smi_setup_regs(struct smi_instance *inst);
 inline void smi_write_single_word(struct smi_instance *inst,uint32_t data);
 void smi_dump_context_labelled(struct smi_instance *inst);
 void smi_setup_clock(struct smi_instance *inst, int divi, int divf);
+void smi_init(struct smi_instance *inst);
 
 
 #define SMI_WIDTH_8BIT 0

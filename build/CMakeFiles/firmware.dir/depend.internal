@@ -38,6 +38,7 @@ CMakeFiles/firmware.dir/peripheral/rpi-interrupts.c.obj
  /home/aleksey/rpi/firmware/peripheral/rpi-interrupts.h
 CMakeFiles/firmware.dir/peripheral/rpi-smi.c.obj
  /home/aleksey/rpi/firmware/peripheral/rpi-base.h
+ /home/aleksey/rpi/firmware/peripheral/rpi-gpio.h
  /home/aleksey/rpi/firmware/peripheral/rpi-smi.c
  /home/aleksey/rpi/firmware/peripheral/rpi-smi.h
 CMakeFiles/firmware.dir/peripheral/rpi-systimer.c.obj

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "rpi-smi.h"
 #include "rpi-base.h"
+#include "rpi-gpio.h"
 
 
 
@@ -28,7 +29,9 @@ static inline void write_cm_smi_reg(struct smi_instance *inst, uint32_t val, rpi
 static inline uint32_t read_cm_smi_reg(struct smi_instance *inst, rpi_reg_rw_t reg)
 {
     rpi_reg_rw_t *target_reg = inst->cm_smi_regs_ptr + reg;
+   // printf ("target_reg: 0x%08x: 0x%08x \r\n", target_reg, *target_reg);
     uint32_t reg_value = (uint32_t) *target_reg;
+   // printf ("reg_value: 0x%08x: \r\n", reg_value);
     return reg_value;
 }
 
@@ -43,16 +46,36 @@ static inline uint32_t read_cm_smi_reg(struct smi_instance *inst, rpi_reg_rw_t r
 
 void smi_dump_context_labelled(struct smi_instance *inst)
 {
-    printf("SMI context dump: ");
-    printf("CM_SMI_CTL:  0x%08x", (unsigned int)read_cm_smi_reg(inst, CM_SMI_CTL));
-    printf("CM_SMI_DIV:  0x%08x", (unsigned int)read_cm_smi_reg(inst, CM_SMI_DIV));
-    printf("SMICS:  0x%08x", (unsigned int)read_smi_reg(inst, SMICS));
-    printf("SMIL:   0x%08x", (unsigned int)read_smi_reg(inst, SMIL));
-    printf("SMIDSR: 0x%08x", (unsigned int)read_smi_reg(inst, SMIDSR0));
-    printf("SMIDSW: 0x%08x", (unsigned int)read_smi_reg(inst, SMIDSW0));
-    printf("SMIDC:  0x%08x", (unsigned int)read_smi_reg(inst, SMIDC));
-    printf("SMIFD:  0x%08x", (unsigned int)read_smi_reg(inst, SMIFD));
-    printf(" ");
+    //RPI_SetGpioPinFunction( RPI_GPIO14, FS_ALT5 );
+    //RPI_SetGpioPinFunction( RPI_GPIO15, FS_ALT5 );
+
+    printf("SMI context dump: \r\n");
+    printf("CM_SMI_CTL:  0x%08x \r\n", read_cm_smi_reg(inst, CM_SMI_CTL));
+    printf("CM_SMI_DIV:  0x%08x \r\n", read_cm_smi_reg(inst, CM_SMI_DIV));
+    printf("SMICS:  0x%08x \r\n", read_smi_reg(inst, SMICS));
+    printf("SMIL:   0x%08x \r\n", read_smi_reg(inst, SMIL));
+    printf("SMIDSR: 0x%08x \r\n", read_smi_reg(inst, SMIDSR0));
+    printf("SMIDSW: 0x%08x \r\n", read_smi_reg(inst, SMIDSW0));
+    printf("SMIDC:  0x%08x \r\n", read_smi_reg(inst, SMIDC));
+    printf("SMIFD:  0x%08x \r\n", read_smi_reg(inst, SMIFD));
+    printf(" \r\n");
+    RPI_WaitMicroSeconds(2000);
+
+   // RPI_SetGpioPinFunction( RPI_GPIO14, FS_ALT1 );
+   // RPI_SetGpioPinFunction( RPI_GPIO15, FS_ALT1 );
+}
+
+void smi_init(struct smi_instance *inst)
+{
+    inst->cm_smi_regs_ptr = CM_SMI_BASE_ADDRESS ;
+    inst->smi_regs_ptr = SMI_BASE_ADDRESS ; //Pointer for base smi physical address
+
+    printf ("Smi address inititalized: \r\n");
+    printf ("CM_SMI base: 0x%08x: 0x%08x \r\n", inst->cm_smi_regs_ptr, *inst->cm_smi_regs_ptr);
+    printf ("SMI base: 0x%08x : 0x%08x \r\n", inst->smi_regs_ptr, *inst->smi_regs_ptr);
+    printf(" \r\n");
+
+    //smi_dump_context_labelled(inst);
 }
 
 void smi_get_default_settings(struct smi_instance *inst)
@@ -205,16 +228,15 @@ inline void smi_write_single_word(struct smi_instance *inst,
 void smi_setup_clock(struct smi_instance *inst, int divi, int divf)
 {
     int  cm_smi_ctl_temp = 0,  cm_smi_div_temp = 0;
-    cm_smi_ctl_temp = read_cm_smi_reg(inst->cm_smi_regs_ptr, CM_SMI_CTL);
-    cm_smi_div_temp = read_cm_smi_reg(inst->cm_smi_regs_ptr, CM_SMI_DIV);
+    cm_smi_ctl_temp = read_cm_smi_reg(inst, CM_SMI_CTL);
+    cm_smi_div_temp = read_cm_smi_reg(inst, CM_SMI_DIV);
 
-    SET_BIT_FIELD(cm_smi_div_temp, CM_SMI_CTL_SRC, 0x6);
+    SET_BIT_FIELD(cm_smi_ctl_temp, CM_SMI_CTL_SRC, 0x6);
 
-    write_cm_smi_reg(inst, cm_smi_div_temp, CM_SMI_CTL);
+    write_cm_smi_reg(inst, cm_smi_ctl_temp | CM_PWD, CM_SMI_CTL);
 
     SET_BIT_FIELD(cm_smi_div_temp, CM_SMI_DIV_DIVI, divi);
     SET_BIT_FIELD(cm_smi_div_temp, CM_SMI_DIV_DIVF, divf);
-
     write_cm_smi_reg(inst, cm_smi_div_temp, CM_SMI_DIV);
 
 }

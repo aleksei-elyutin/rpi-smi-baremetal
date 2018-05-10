@@ -44,7 +44,7 @@
 void kernel_main( unsigned int r0, unsigned int r1, unsigned int atags )
 {
     /* Enable interrupts! */
-    _enable_interrupts();
+   // _enable_interrupts();
 
     /* Initialise the UART */
     RPI_AuxMiniUartInit( 115200, 8 );
@@ -52,24 +52,33 @@ void kernel_main( unsigned int r0, unsigned int r1, unsigned int atags )
     /* Print to the UART using the standard libc functions */
     printf( "Initialise UART console with standard libc\r\n\n" );
 
+    RPI_WaitMicroSeconds(2000000);
+
     struct smi_instance smi_iface;
-    smi_iface.cm_smi_regs_ptr = (uint32_t*) CM_SMI_BASE_ADDRESS ;
-    smi_iface.smi_regs_ptr = (uint32_t*) SMI_BASE_ADDRESS ; //Pointer for base smi physical address
+    smi_init(&smi_iface);
+    smi_dump_context_labelled(&smi_iface);
+
+
+
+
+    RPI_WaitMicroSeconds(2000000);
 
     smi_setup_clock(&smi_iface, 50, 0);
     smi_setup_regs(&smi_iface);
     smi_set_address(&smi_iface, 0x0 );
 
-    int i;
+
+    /*int i;
     for (i=0; i<44; i++)
     {
-      if (~((i==26)|(i==26)))
+      if (~((i==25)|(i==26)))
       {
         RPI_SetGpioPinFunction(i,FS_ALT1);
       }
-    }
+    }*/
 
-
+    printf( "Setup complete :\r\n\n" );
+    smi_dump_context_labelled(&smi_iface);
     while( 1 )
     {
             smi_write_single_word(&smi_iface, 0x5555AAAA);
